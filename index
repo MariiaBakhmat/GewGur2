@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>GewGur Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-gradient-start: #1c1c3a;
+      --bg-gradient-end: #0c0c1e;
+      --card-bg-light: rgba(255, 255, 255, 0.05);
+      --card-bg-dark: rgba(0, 0, 0, 0.2);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --text-color-light: #e0e0e0;
+      --text-color-dark: #b0b0b0;
+      --primary-accent: #8e8eec;
+      --secondary-accent: #a9a9ed;
+      --chat-bubble-user: #8e8eec;
+      --chat-bubble-agent: rgba(255, 255, 255, 0.08);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      color: var(--text-color-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      margin: 0;
+      perspective: 1200px;
+    }
+    .aether-ui-container {
+      position: relative;
+      z-index: 1;
+      width: 95%;
+      max-width: 800px;
+      height: 95vh;
+      max-height: 900px;
+      background: var(--card-bg-dark);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 40px rgba(142,142,236,0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      animation: fadeInScale 0.8s ease-out;
+    }
+    @keyframes fadeInScale {
+      from {opacity: 0; transform: scale(0.95) translateY(20px);}
+      to {opacity: 1; transform: scale(1) translateY(0);}
+    }
+    .header {
+      padding: 20px 30px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg-light);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 30px 30px 0 0;
+      transform: translateZ(20px);
+    }
+    .header h1 {
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: var(--primary-accent);
+      text-shadow: 0 0 5px rgba(142,142,236,0.5);
+      margin: 0;
+    }
+    .chat-history {
+      flex-grow: 1;
+      padding: 20px 30px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      transform: translateZ(10px);
+    }
+    .chat-history::-webkit-scrollbar {
+      display: none;
+    }
+    .message-container {
+      display: flex;
+      margin-bottom: 15px;
+      align-items: flex-end;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: messageFadeIn 0.5s ease-out forwards;
+    }
+    @keyframes messageFadeIn {
+      to {opacity: 1; transform: translateY(0);}
+    }
+    .message-container.agent {
+      justify-content: flex-start;
+    }
+    .message-container.user {
+      justify-content: flex-end;
+    }
+    .message-bubble {
+      max-width: 75%;
+      padding: 12px 18px;
+      border-radius: 20px;
+      line-height: 1.5;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .message-container.user .message-bubble {
+      background-color: var(--chat-bubble-user);
+      color: white;
+      border-bottom-right-radius: 5px;
+    }
+    .message-container.agent .message-bubble {
+      background-color: var(--chat-bubble-agent);
+      color: var(--text-color-light);
+      border-bottom-left-radius: 5px;
+    }
+    .message-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: white;
+      margin: 0 10px;
+      background: linear-gradient(45deg, var(--primary-accent), var(--secondary-accent));
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .message-container.user .message-avatar { order: 2; }
+    .message-container.agent .message-avatar { order: 1; }
+    .chat-input-area {
+      padding: 20px 30px;
+      border-top: 1px solid var(--border-color);
+      background: var(--card-bg-light);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 0 0 30px 30px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      transform: translateZ(20px);
+    }
+    .chat-input {
+      flex-grow: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 25px;
+      padding: 12px 20px;
+      color: var(--text-color-light);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s ease-in-out;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .chat-input:focus {
+      border-color: var(--primary-accent);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.3), 0 0 10px rgba(142,142,236,0.3);
+    }
+    .chat-input::placeholder {
+      color: var(--text-color-dark);
+    }
+    .action-icon-button {
+      background: linear-gradient(45deg, var(--primary-accent), var(--secondary-accent));
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.3rem;
+      color: white;
+      box-shadow: 0 4px 15px rgba(142,142,236,0.4);
+      transition: all 0.2s ease-in-out;
+    }
+    .action-icon-button:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(142,142,236,0.6);
+    }
+    .action-icon-button:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 2px 5px rgba(142,142,236,0.2);
+    }
+    #loader {
+      font-size: 24px;
+      font-style: italic;
+      color: #ffffffcc;
+      margin: 20px 0;
+      margin-bottom: 10px;
+      text-align: center;
+      display: none;
+      font-weight: bold;
+      user-select: none; 
+    }
+  </style>
+</head>
+<body>
+  <div class="aether-ui-container">
+    <div class="header"><h1>GewGur Chat</h1></div>
+    <div id="chat-history" class="chat-history"></div>
+    <div id="loader">...</div>
+    <div class="chat-input-area">
+      <input id="user-input" type="text" class="chat-input" placeholder="Напиши повідомлення..." />
+      <button id="send-button" class="action-icon-button" title="Відправити">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const chatHistory = document.getElementById("chat-history");
+    const loader = document.getElementById("loader");
+    const userInput = document.getElementById("user-input");
+    const sendButton = document.getElementById("send-button");
+
+    const historyUrl = "https://n8n.beinf.ai/webhook/da1ae5d0-bfe1-4835-bb72-07f0b869ffc0";  
+    const askUrl = "https://n8n.beinf.ai/webhook/b0646017-6e57-432a-b6b9-39d889fdefb6";   
+
+    const sessionId = localStorage.getItem("sessionId") || crypto.randomUUID();
+    localStorage.setItem("sessionId", sessionId);
+
+    function appendMessage(sender, message) {
+      const container = document.createElement("div");
+      container.classList.add("message-container", sender);
+      container.style.animationDelay = "0.1s";
+
+      const avatar = document.createElement("div");
+      avatar.classList.add("message-avatar");
+      avatar.textContent = sender === "user" ? "👤" : "🤖";
+
+      const bubble = document.createElement("div");
+      bubble.classList.add("message-bubble");
+      bubble.textContent = message;
+
+      if (sender === "user") {
+        container.appendChild(bubble);
+        container.appendChild(avatar);
+      } else {
+        container.appendChild(avatar);
+        container.appendChild(bubble);
+      }
+      chatHistory.appendChild(container);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    async function loadHistory() {
+      try {
+        const res = await fetch(historyUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId }),
+        });
+        const data = await res.json();
+        if (Array.isArray(data.history) && data.history.length > 0) {
+          data.history.forEach(({ sender, text }) => appendMessage(sender, text));
+        } else {
+          appendMessage("bot", "Hi there! 👋 My name is Taluno. How can I assist you today?");
+        }
+      } catch (e) {
+        console.error("Помилка при отриманні історії", e);
+        appendMessage("bot", "Hi there! 👋 My name is Taluno. How can I assist you today?");
+      }
+    }
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      appendMessage("user", message);
+      userInput.value = "";
+
+      loader.style.display = "block";  // показати лоудер
+
+      try {
+        const res = await fetch(askUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId, chatInput: message }),
+        });
+        const data = await res.json();
+        appendMessage("bot", data.text || "[Немає відповіді]");
+      } catch (e) {
+        appendMessage("bot", "[Помилка при надсиланні]");
+        console.error(e);
+      } finally {
+        loader.style.display = "none";  // сховати лоудер
+      }
+    }
+
+    sendButton.addEventListener("click", sendMessage);
+    userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    window.onload = loadHistory;
+  </script>
+</body>
+</html>
