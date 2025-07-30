@@ -178,17 +178,18 @@
 
     .chat-input {
       flex-grow: 1;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 25px;
-      padding: 12px 20px;
-      color: var(--text-color-light);
+      background: #EAE0B5;
+      border: 0.5px solid #004240;
+      border-radius: 40px;
+      padding: 8px 24px;
+      color: #004240;
       font-size: 1rem;
       outline: none;
     }
 
     .chat-input::placeholder {
-      color: var(--text-color-dark);
+      color: #004240;
+      opacity: 0.6;
     }
 
     .action-icon-button {
@@ -224,32 +225,6 @@
       min-width: 30px;
     }
 
-    @media (max-width: 640px) {
-      .aether-ui-container {
-        height: 100dvh;
-        max-height: none;
-        border-radius: 0;
-      }
-
-      .header h1 {
-        font-size: 1.3rem;
-      }
-
-      .chat-input {
-        font-size: 0.95rem;
-        padding: 10px 16px;
-      }
-
-      .action-icon-button {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-      }
-
-      .message-bubble {
-        font-size: 0.95rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -358,10 +333,10 @@
           body: JSON.stringify({ sessionId, chatInput: message }),
         });
         const data = await res.json();
-        appendMessage("bot", data.text || "[Hoppla, da ist etwas schiefgelaufen. Bitte versuche es später erneut oder wende dich an den Support.]");
+        appendMessage("bot", data.text || "[Hoppla, da ist etwas schiefgelaufen...]");
       } catch (e) {
         console.error(e);
-        appendMessage("bot", "[Hoppla, da ist etwas schiefgelaufen. Bitte versuche es später erneut oder wende dich an den Support.]");
+        appendMessage("bot", "[Hoppla, da ist etwas schiefgelaufen...]");
       } finally {
         if (loaderBubble) loaderBubble.remove();
         isWaitingForResponse = false;
