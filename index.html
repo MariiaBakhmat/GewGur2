@@ -4,19 +4,17 @@
   <meta charset="UTF-8" />
   <title>Gewürz Guru Chat</title>
 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     html, body {
       background: #0c0c1e;
       margin: 0;
       padding: 0;
     }
-  </style>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <style>
     :root {
       --bg-gradient-start: #1c1c3a;
       --bg-gradient-end: #0c0c1e;
@@ -59,14 +57,8 @@
     }
 
     @keyframes fade-in-bg {
-      from {
-        opacity: 0;
-        transform: scale(1.015);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+      from { opacity: 0; transform: scale(1.015); }
+      to   { opacity: 1; transform: scale(1); }
     }
 
     .aether-ui-container {
@@ -133,6 +125,7 @@
 
     .message-container.bot {
       justify-content: flex-start;
+      align-items: flex-start;
     }
 
     .message-container.user {
@@ -147,6 +140,10 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       white-space: pre-wrap;
       word-break: break-word;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      flex-grow: 1;
+      min-width: 0;
     }
 
     .message-container.user .message-bubble {
@@ -166,7 +163,7 @@
       height: 35px;
       border-radius: 50%;
       display: flex;
-      margin: 0 10px;
+      margin: 0 10px 0 0;
       object-fit: cover;
     }
 
@@ -303,11 +300,11 @@
         if (Array.isArray(data.history) && data.history.length > 0) {
           data.history.forEach(({ sender, text }) => appendMessage(sender, text));
         } else {
-          appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen...");
+          appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen. Ich bin noch neu hier, aber ich kann dir schon jetzt helfen, den richtigen Tee oder das perfekte Gewürz zu finden!");
         }
       } catch (e) {
         console.error("memory error", e);
-        appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen...");
+        appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen. Ich bin noch neu hier, aber ich kann dir schon jetzt helfen, den richtigen Tee oder das perfekte Gewürz zu finden!");
       }
     }
 
