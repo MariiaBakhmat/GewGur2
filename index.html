@@ -2,6 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gewürz Guru Chat</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -9,50 +10,35 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    html, body {
-      background: #0c0c1e;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg-gradient-start: #1c1c3a;
-      --bg-gradient-end: #0c0c1e;
-      --card-bg-light: #003836;
-      --card-bg-dark: rgba(0, 0, 0, 0.2);
-      --border-color: transparent;
-      --text-color-light: #e0e0e0;
-      --text-color-dark: #b0b0b0;
-      --primary-accent: #DBC59D;
-      --secondary-accent: #a9a9ed;
-      --chat-bubble-user: #EAE0b5;
-      --chat-bubble-bot: #0a4845;
-      --text-color-user: #006663;
-      --text-color-bot: #ffffff;
+    html {
+      height: 100%;
+      overscroll-behavior: contain;
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: #0c0c1e;
-      color: var(--text-color-light);
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      overflow: hidden;
-      margin: 0;
-      perspective: 1200px;
+      background: #0c0c1e;
+      font-family: 'Inter', sans-serif;
+      color: #e0e0e0;
       position: relative;
     }
 
     body::before {
       content: "";
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: url("https://raw.githubusercontent.com/MariiaBakhmat/GewGur/refs/heads/main/BG%20GGAI.webp") no-repeat center center fixed;
       background-size: cover;
       opacity: 0;
-      animation: fade-in-bg 0.30s ease-in-out forwards;
+      animation: fade-in-bg 0.3s ease-in-out forwards;
       z-index: -1;
     }
 
@@ -62,16 +48,14 @@
     }
 
     .aether-ui-container {
-      position: relative;
-      z-index: 1;
       width: 95%;
       max-width: 800px;
       height: 95vh;
       max-height: 900px;
-      background: var(--card-bg-dark);
+      background: var(--card-bg-dark, rgba(0, 0, 0, 0.2));
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid var(--border-color);
+      border: 1px solid transparent;
       border-radius: 30px;
       box-shadow: 0 10px 30px rgba(1, 40, 39, 0.5), 0 0 40px rgba(1, 40, 39, 0.8);
       display: flex;
@@ -81,18 +65,15 @@
 
     .header {
       padding: 20px 30px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--card-bg-light);
+      border-bottom: 1px solid transparent;
+      background: #003836;
       border-radius: 30px 30px 0 0;
     }
 
     .header h1 {
       font-weight: 600;
       font-size: 1.6rem;
-      color: var(--primary-accent);
+      color: #DBC59D;
       text-shadow: 0 0 5px rgba(142,142,236,0.5);
       margin: 0;
     }
@@ -101,7 +82,6 @@
       flex-grow: 1;
       padding: 20px 30px;
       overflow-y: auto;
-      scroll-behavior: smooth;
       background-color: rgba(0, 102, 99, 0.7);
     }
 
@@ -112,8 +92,6 @@
     .message-container {
       display: flex;
       margin-bottom: 15px;
-      align-items: flex-end;
-      position: relative;
       opacity: 0;
       transform: translateY(20px);
       animation: messageFadeIn 0.5s ease-out forwards;
@@ -140,21 +118,18 @@
       line-height: 1.5;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       white-space: pre-wrap;
-      word-break: break-word;
-      overflow-wrap: break-word;
       word-wrap: break-word;
-      min-width: 0;
     }
 
     .message-container.user .message-bubble {
-      background-color: var(--chat-bubble-user);
-      color: var(--text-color-user);
+      background-color: #EAE0b5;
+      color: #006663;
       border-bottom-right-radius: 5px;
     }
 
     .message-container.bot .message-bubble {
-      background-color: var(--chat-bubble-bot);
-      color: var(--text-color-bot);
+      background-color: #0a4845;
+      color: #ffffff;
       border-bottom-left-radius: 5px;
     }
 
@@ -163,14 +138,14 @@
       height: 35px;
       border-radius: 50%;
       display: flex;
-      margin: 0 10px 0 0;
+      margin-right: 10px;
       object-fit: cover;
     }
 
     .chat-input-area {
       padding: 20px 30px;
-      border-top: 1px solid var(--border-color);
-      background: var(--card-bg-light);
+      border-top: 1px solid transparent;
+      background: #003836;
       display: flex;
       gap: 15px;
       align-items: center;
@@ -182,13 +157,13 @@
       border: 1px solid rgba(255,255,255,0.15);
       border-radius: 25px;
       padding: 12px 20px;
-      color: var(--text-color-light);
+      color: #e0e0e0;
       font-size: 1rem;
       outline: none;
     }
 
     .chat-input::placeholder {
-      color: var(--text-color-dark);
+      color: #b0b0b0;
     }
 
     .action-icon-button {
@@ -219,11 +194,35 @@
       border-radius: 20px;
       font-size: 14px;
       box-shadow: none;
-      flex-grow: 0;
-      max-width: fit-content;
-      min-width: 30px;
     }
 
+    @media (max-width: 640px) {
+      .header h1 {
+        font-size: 1.3rem;
+      }
+
+      .chat-input {
+        font-size: 0.95rem;
+        padding: 10px 16px;
+      }
+
+      .action-icon-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+
+      .message-bubble {
+        font-size: 0.95rem;
+      }
+
+      .aether-ui-container {
+        border-radius: 0;
+        width: 100%;
+        height: 100dvh;
+        max-height: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -304,11 +303,11 @@
         if (Array.isArray(data.history) && data.history.length > 0) {
           data.history.forEach(({ sender, text }) => appendMessage(sender, text));
         } else {
-          appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen. Ich bin noch neu hier, aber ich kann dir schon jetzt helfen, den richtigen Tee oder das perfekte Gewürz zu finden!");
+          appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen...");
         }
       } catch (e) {
         console.error("memory error", e);
-        appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen. Ich bin noch neu hier, aber ich kann dir schon jetzt helfen, den richtigen Tee oder das perfekte Gewürz zu finden!");
+        appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen...");
       }
     }
 
