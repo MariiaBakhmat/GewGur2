@@ -2,27 +2,40 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <title>GewGur Chat</title>
+  <title>Gewürz Guru Chat</title>
+
+  <style>
+    html, body {
+      background: #0c0c1e;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     :root {
       --bg-gradient-start: #1c1c3a;
       --bg-gradient-end: #0c0c1e;
-      --card-bg-light: rgba(255, 255, 255, 0.05);
+      --card-bg-light: #003836;
       --card-bg-dark: rgba(0, 0, 0, 0.2);
-      --border-color: rgba(255, 255, 255, 0.1);
+      --border-color: transparent;
       --text-color-light: #e0e0e0;
       --text-color-dark: #b0b0b0;
-      --primary-accent: #8e8eec;
+      --primary-accent: #DBC59D;
       --secondary-accent: #a9a9ed;
-      --chat-bubble-user: #8e8eec;
-      --chat-bubble-agent: rgba(255, 255, 255, 0.08);
+      --chat-bubble-user: #EAE0b5;
+      --chat-bubble-bot: #0a4845;
+      --text-color-user: #006663;
+      --text-color-bot: #ffffff;
     }
+
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      background: #0c0c1e;
       color: var(--text-color-light);
       display: flex;
       justify-content: center;
@@ -31,7 +44,31 @@
       overflow: hidden;
       margin: 0;
       perspective: 1200px;
+      position: relative;
     }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url("https://raw.githubusercontent.com/MariiaBakhmat/GewGur/refs/heads/main/BG%20GGAI.webp") no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0;
+      animation: fade-in-bg 0.30s ease-in-out forwards;
+      z-index: -1;
+    }
+
+    @keyframes fade-in-bg {
+      from {
+        opacity: 0;
+        transform: scale(1.015);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
     .aether-ui-container {
       position: relative;
       z-index: 1;
@@ -44,17 +81,12 @@
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       border: 1px solid var(--border-color);
       border-radius: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 40px rgba(142,142,236,0.15);
+      box-shadow: 0 10px 30px rgba(1, 40, 39, 0.5), 0 0 40px rgba(1, 40, 39, 0.8);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transform-style: preserve-3d;
-      animation: fadeInScale 0.8s ease-out;
     }
-    @keyframes fadeInScale {
-      from {opacity: 0; transform: scale(0.95) translateY(20px);}
-      to {opacity: 1; transform: scale(1) translateY(0);}
-    }
+
     .header {
       padding: 20px 30px;
       border-bottom: 1px solid var(--border-color);
@@ -62,11 +94,9 @@
       justify-content: space-between;
       align-items: center;
       background: var(--card-bg-light);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
       border-radius: 30px 30px 0 0;
-      transform: translateZ(20px);
     }
+
     .header h1 {
       font-weight: 600;
       font-size: 1.6rem;
@@ -74,18 +104,19 @@
       text-shadow: 0 0 5px rgba(142,142,236,0.5);
       margin: 0;
     }
+
     .chat-history {
       flex-grow: 1;
       padding: 20px 30px;
       overflow-y: auto;
       scroll-behavior: smooth;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      transform: translateZ(10px);
+      background-color: rgba(0, 102, 99, 0.7);
     }
+
     .chat-history::-webkit-scrollbar {
       display: none;
     }
+
     .message-container {
       display: flex;
       margin-bottom: 15px;
@@ -95,63 +126,59 @@
       transform: translateY(20px);
       animation: messageFadeIn 0.5s ease-out forwards;
     }
+
     @keyframes messageFadeIn {
-      to {opacity: 1; transform: translateY(0);}
+      to { opacity: 1; transform: translateY(0); }
     }
-    .message-container.agent {
+
+    .message-container.bot {
       justify-content: flex-start;
     }
+
     .message-container.user {
       justify-content: flex-end;
     }
+
     .message-bubble {
       max-width: 75%;
       padding: 12px 18px;
       border-radius: 20px;
       line-height: 1.5;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      position: relative;
       white-space: pre-wrap;
       word-break: break-word;
     }
+
     .message-container.user .message-bubble {
       background-color: var(--chat-bubble-user);
-      color: white;
+      color: var(--text-color-user);
       border-bottom-right-radius: 5px;
     }
-    .message-container.agent .message-bubble {
-      background-color: var(--chat-bubble-agent);
-      color: var(--text-color-light);
+
+    .message-container.bot .message-bubble {
+      background-color: var(--chat-bubble-bot);
+      color: var(--text-color-bot);
       border-bottom-left-radius: 5px;
     }
+
     .message-avatar {
       width: 35px;
       height: 35px;
       border-radius: 50%;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: white;
       margin: 0 10px;
-      background: linear-gradient(45deg, var(--primary-accent), var(--secondary-accent));
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      object-fit: cover;
     }
-    .message-container.user .message-avatar { order: 2; }
-    .message-container.agent .message-avatar { order: 1; }
+
     .chat-input-area {
       padding: 20px 30px;
       border-top: 1px solid var(--border-color);
       background: var(--card-bg-light);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border-radius: 0 0 30px 30px;
       display: flex;
       gap: 15px;
       align-items: center;
-      transform: translateZ(20px);
     }
+
     .chat-input {
       flex-grow: 1;
       background: rgba(255,255,255,0.08);
@@ -161,18 +188,14 @@
       color: var(--text-color-light);
       font-size: 1rem;
       outline: none;
-      transition: all 0.2s ease-in-out;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
     }
-    .chat-input:focus {
-      border-color: var(--primary-accent);
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.3), 0 0 10px rgba(142,142,236,0.3);
-    }
+
     .chat-input::placeholder {
       color: var(--text-color-dark);
     }
+
     .action-icon-button {
-      background: linear-gradient(45deg, var(--primary-accent), var(--secondary-accent));
+      background: #C09F58;
       border: none;
       border-radius: 50%;
       width: 48px;
@@ -182,39 +205,33 @@
       align-items: center;
       cursor: pointer;
       font-size: 1.3rem;
-      color: white;
-      box-shadow: 0 4px 15px rgba(142,142,236,0.4);
-      transition: all 0.2s ease-in-out;
+      color: #F2EBDE;
+      transition: opacity 0.2s ease;
     }
-    .action-icon-button:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 6px 20px rgba(142,142,236,0.6);
+
+    .action-icon-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
-    .action-icon-button:active {
-      transform: translateY(0) scale(0.98);
-      box-shadow: 0 2px 5px rgba(142,142,236,0.2);
-    }
-    #loader {
-      font-size: 24px;
+
+    .loading-bubble {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: #ffffff88;
       font-style: italic;
-      color: #ffffffcc;
-      margin: 20px 0;
-      margin-bottom: 10px;
-      text-align: center;
-      display: none;
-      font-weight: bold;
-      user-select: none; 
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      box-shadow: none;
     }
   </style>
 </head>
 <body>
   <div class="aether-ui-container">
-    <div class="header"><h1>GewGur Chat</h1></div>
+    <div class="header"><h1>Gewürz Guru Chat</h1></div>
     <div id="chat-history" class="chat-history"></div>
-    <div id="loader">...</div>
     <div class="chat-input-area">
-      <input id="user-input" type="text" class="chat-input" placeholder="Напиши повідомлення..." />
-      <button id="send-button" class="action-icon-button" title="Відправити">
+      <input id="user-input" type="text" class="chat-input" placeholder="Schreib eine Nachricht..." />
+      <button id="send-button" class="action-icon-button" title="Absenden">
         <i class="fas fa-paper-plane"></i>
       </button>
     </div>
@@ -222,38 +239,57 @@
 
   <script>
     const chatHistory = document.getElementById("chat-history");
-    const loader = document.getElementById("loader");
     const userInput = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
 
-    const historyUrl = "https://n8n.beinf.ai/webhook/da1ae5d0-bfe1-4835-bb72-07f0b869ffc0";  
-    const askUrl = "https://n8n.beinf.ai/webhook/b0646017-6e57-432a-b6b9-39d889fdefb6";   
+    const historyUrl = "https://n8n.beinf.ai/webhook/da1ae5d0-bfe1-4835-bb72-07f0b869ffc0";
+    const askUrl = "https://n8n.beinf.ai/webhook/68012dbd-61e3-47df-8cfd-1c02ebb6fff6";
 
     const sessionId = localStorage.getItem("sessionId") || crypto.randomUUID();
     localStorage.setItem("sessionId", sessionId);
 
+    let isWaitingForResponse = false;
+
     function appendMessage(sender, message) {
       const container = document.createElement("div");
-      container.classList.add("message-container", sender);
-      container.style.animationDelay = "0.1s";
-
-      const avatar = document.createElement("div");
-      avatar.classList.add("message-avatar");
-      avatar.textContent = sender === "user" ? "👤" : "🤖";
+      container.classList.add("message-container", sender === "user" ? "user" : "bot");
 
       const bubble = document.createElement("div");
       bubble.classList.add("message-bubble");
       bubble.textContent = message;
 
-      if (sender === "user") {
-        container.appendChild(bubble);
+      if (sender === "bot") {
+        const avatar = document.createElement("img");
+        avatar.classList.add("message-avatar");
+        avatar.src = "https://github.com/MariiaBakhmat/GewGur/blob/main/Guru.png?raw=true";
+        avatar.alt = "Bot Avatar";
         container.appendChild(avatar);
-      } else {
-        container.appendChild(avatar);
-        container.appendChild(bubble);
       }
+
+      container.appendChild(bubble);
       chatHistory.appendChild(container);
       chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function showAgentLoaderMessage() {
+      const container = document.createElement("div");
+      container.classList.add("message-container", "bot");
+
+      const avatar = document.createElement("img");
+      avatar.classList.add("message-avatar");
+      avatar.src = "https://github.com/MariiaBakhmat/GewGur/blob/main/Guru.png?raw=true";
+      avatar.alt = "Bot Avatar";
+
+      const bubble = document.createElement("div");
+      bubble.classList.add("message-bubble", "loading-bubble");
+      bubble.textContent = ".....";
+
+      container.appendChild(avatar);
+      container.appendChild(bubble);
+      chatHistory.appendChild(container);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+
+      return container;
     }
 
     async function loadHistory() {
@@ -267,22 +303,26 @@
         if (Array.isArray(data.history) && data.history.length > 0) {
           data.history.forEach(({ sender, text }) => appendMessage(sender, text));
         } else {
-          appendMessage("bot", "Hi there! 👋 My name is Taluno. How can I assist you today?");
+          appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen...");
         }
       } catch (e) {
-        console.error("Помилка при отриманні історії", e);
-        appendMessage("bot", "Hi there! 👋 My name is Taluno. How can I assist you today?");
+        console.error("memory error", e);
+        appendMessage("bot", "Hey! Ich bin der Gewürz Guru – dein Helfer beim Einkaufen...");
       }
     }
 
     async function sendMessage() {
+      if (isWaitingForResponse) return;
       const message = userInput.value.trim();
       if (!message) return;
+
+      isWaitingForResponse = true;
+      sendButton.disabled = true;
 
       appendMessage("user", message);
       userInput.value = "";
 
-      loader.style.display = "block";  // показати лоудер
+      const loaderBubble = showAgentLoaderMessage();
 
       try {
         const res = await fetch(askUrl, {
@@ -291,18 +331,24 @@
           body: JSON.stringify({ sessionId, chatInput: message }),
         });
         const data = await res.json();
-        appendMessage("bot", data.text || "[Немає відповіді]");
+        appendMessage("bot", data.text || "[Hoppla, da ist etwas schiefgelaufen...]");
       } catch (e) {
-        appendMessage("bot", "[Помилка при надсиланні]");
         console.error(e);
+        appendMessage("bot", "[Hoppla, da ist etwas schiefgelaufen...]");
       } finally {
-        loader.style.display = "none";  // сховати лоудер
+        if (loaderBubble) loaderBubble.remove();
+        isWaitingForResponse = false;
+        sendButton.disabled = false;
+        userInput.focus();
       }
     }
 
-    sendButton.addEventListener("click", sendMessage);
+    sendButton.addEventListener("click", () => {
+      if (!isWaitingForResponse) sendMessage();
+    });
+
     userInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
+      if (e.key === "Enter" && !isWaitingForResponse) {
         sendMessage();
       }
     });
