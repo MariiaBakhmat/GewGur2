@@ -68,9 +68,9 @@
       position: relative;
       z-index: 1;
       max-width: 800px;
-      max-height: 700px;
+      max-height: 900px;
       width: calc(100% - 32px);
-      height: calc(100vh - 82px);
+      height: calc(100dvh - 32px);
       background: var(--card-bg-dark);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -84,6 +84,27 @@
       padding-top: env(safe-area-inset-top); 
       background-clip: padding-box;
     }
+    
+    @media(max-width:768px){.aether-ui-container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      max-height: 500px;
+      width: calc(100% - 32px);
+      height: calc(100vh - 282px);
+      background: var(--card-bg-dark);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(1, 40, 39, 0.5), 0 0 40px rgba(1, 40, 39, 0.8);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-top: env(safe-area-inset-top); 
+      background-clip: padding-box;
+    }}
 
     .header {
       padding: 20px 30px;
